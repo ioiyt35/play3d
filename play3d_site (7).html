@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLAY3D — игрушки с 3D-принтера</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Arial,sans-serif; }
+body { background:#0f0f1a; color:#f0f0f4; }
+a { text-decoration:none; color:inherit; }
+.container { max-width:1100px; margin:0 auto; padding:0 20px; }
+header { background:#141428; border-bottom:1px solid #26264a; position:sticky; top:0; z-index:10; }
+.nav { display:flex; justify-content:space-between; align-items:center; padding:16px 0; }
+.logo { font-weight:bold; font-size:1.4rem; background:linear-gradient(90deg,#a78bfa,#f472b6); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.nav-links { display:flex; gap:24px; }
+.nav-links a { color:#c7c7d9; font-size:.95rem; }
+.nav-links a:hover { color:#fff; }
+.menu-btn { display:none; background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer; }
+.ticker { background:linear-gradient(90deg,#7c3aed,#db2777); overflow:hidden; white-space:nowrap; padding:10px 0; font-weight:600; letter-spacing:2px; font-size:.85rem; }
+.ticker span { display:inline-block; animation:ticker 20s linear infinite; }
+@keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+.hero { text-align:center; padding:80px 20px 60px; background:radial-gradient(ellipse at top,rgba(124,58,237,.25),transparent 60%); }
+.hero .badge { display:inline-block; border:1px solid #7c3aed; border-radius:20px; padding:8px 18px; font-size:.9rem; color:#c4b5fd; margin-bottom:24px; }
+.hero h1 { font-size:clamp(2rem,5vw,3.2rem); line-height:1.15; margin-bottom:18px; }
+.hero p { color:#a0a0b8; max-width:560px; margin:0 auto 30px; font-size:1.05rem; }
+.btn { display:inline-block; background:linear-gradient(90deg,#8b5cf6,#ec4899); color:#fff; padding:14px 32px; border:none; border-radius:12px; font-size:1rem; font-weight:600; cursor:pointer; transition:transform .15s, box-shadow .15s; }
+.btn:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(139,92,246,.4); }
+.btn-outline { background:transparent; border:1px solid #4b4b78; color:#e0e0f0; }
+.btn-outline:hover { border-color:#8b5cf6; box-shadow:none; }
+section { padding:60px 0; }
+h2 { text-align:center; font-size:1.9rem; margin-bottom:10px; }
+.section-sub { text-align:center; color:#a0a0b8; margin-bottom:40px; }
+.features { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:20px; }
+.feature { background:#1a1a2e; border:1px solid #26264a; border-radius:16px; padding:26px; }
+.feature .icon { font-size:1.8rem; margin-bottom:12px; }
+.feature h3 { font-size:1.1rem; margin-bottom:8px; }
+.feature p { color:#a0a0b8; font-size:.92rem; line-height:1.5; }
+.price-note { text-align:center; color:#c4b5fd; font-size:.95rem; margin-bottom:30px; }
+.catalog { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:24px; max-width:700px; margin:0 auto; }
+.card { background:#1a1a2e; border:1px solid #26264a; border-radius:16px; padding:26px; text-align:center; transition:transform .2s; }
+.card:hover { transform:translateY(-4px); }
+.card .emoji { font-size:3rem; margin-bottom:12px; }
+.card h3 { font-size:1.15rem; margin-bottom:8px; }
+.card p { color:#a0a0b8; font-size:.9rem; margin-bottom:14px; }
+.price { font-size:1.35rem; font-weight:bold; color:#fbbf24; }
+.steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; }
+.step { background:#1a1a2e; border:1px solid #26264a; border-radius:16px; padding:24px; }
+.step .num { width:36px; height:36px; border-radius:50%; background:linear-gradient(90deg,#8b5cf6,#ec4899); display:flex; align-items:center; justify-content:center; font-weight:bold; margin-bottom:12px; }
+.step h3 { font-size:1.05rem; margin-bottom:8px; }
+.step p { color:#a0a0b8; font-size:.9rem; line-height:1.5; }
+.order-box { background:#1a1a2e; border:1px solid #26264a; border-radius:20px; max-width:560px; margin:0 auto; padding:36px; }
+.form-group { margin-bottom:18px; }
+.form-group label { display:block; font-size:.9rem; color:#c7c7d9; margin-bottom:6px; }
+.form-group input, .form-group select { width:100%; background:#12121f; border:1px solid #34345e; border-radius:10px; padding:13px 14px; color:#f0f0f4; font-size:1rem; }
+.form-group input:focus, .form-group select:focus { outline:none; border-color:#8b5cf6; }
+.btn-full { width:100%; padding:14px; font-size:1.05rem; }
+.max-block { margin-top:22px; text-align:center; }
+.max-note { color:#ff3b3b; font-weight:bold; font-size:1.08rem; margin-top:14px; text-shadow:0 0 12px rgba(255,59,59,.6); animation:pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.55} }
+.form-status { text-align:center; color:#4ade80; margin-top:12px; font-weight:600; min-height:1.4em; }
+footer { border-top:1px solid #26264a; padding:28px 0; text-align:center; color:#7a7a92; font-size:.9rem; }
+footer a { color:#a78bfa; }
+@media (max-width:640px){ .nav-links{display:none} .menu-btn{display:block} .hero{padding:50px 16px 40px} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <div class="logo">PLAY3D</div>
+    <nav class="nav-links">
+      <a href="#why">Почему мы</a>
+      <a href="#catalog">Каталог</a>
+      <a href="#process">Как это сделано</a>
+      <a href="#order">Заказать</a>
+    </nav>
+    <button class="menu-btn" onclick="document.querySelector('.nav-links').style.display = document.querySelector('.nav-links').style.display==='flex'?'none':'flex'">☰</button>
+  </div>
+</header>
+
+<div class="ticker"><span>ДРАКОНЫ · ДИНОЗАВРЫ · ПОДВИЖНЫЕ ФИГУРКИ · АРТ-ОБЪЕКТЫ · ПОДАРКИ · ДРАКОНЫ · ДИНОЗАВРЫ · ПОДВИЖНЫЕ ФИГУРКИ · АРТ-ОБЪЕКТЫ · ПОДАРКИ · </span></div>
+
+<section class="hero">
+  <div class="badge">🖨️ Печатаем на 3D-принтере · Городец, Нижегородская область</div>
+  <h1>Игрушки, которых нет<br>в магазинах</h1>
+  <p>Драконы, подвижные динозавры, подставки и фигурки — печатаем на 3D-принтере, красим вручную и отправляем по всей России.</p>
+  <div>
+    <a href="#catalog" class="btn">Смотреть каталог</a>
+    <a href="#order" class="btn btn-outline">Сделать заказ</a>
+  </div>
+</section>
+
+<section id="why">
+  <div class="container">
+    <h2>Почему PLAY3D</h2>
+    <p class="section-sub">Маленькое производство с большим характером</p>
+    <div class="features">
+      <div class="feature">
+        <div class="icon">🎨</div>
+        <h3>Ручная покраска</h3>
+        <p>Каждая игрушка раскрашивается вручную акрилом — двух одинаковых не бывает.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">🌿</div>
+        <h3>Лёгкие и прочные</h3>
+        <p>Игрушки лёгкие, не боятся падений и приятно лежат в руке.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">⚡</div>
+        <h3>Печать за 1–3 дня</h3>
+        <p>Готовые модели отправляем на следующий день, под заказ — в течение трёх.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">📦</div>
+        <h3>Доставка по России</h3>
+        <p>Почта, СДЭК, Boxberry — упакуем в жёсткий короб, чтобы доехало целым.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="catalog">
+  <div class="container">
+    <h2>Хиты этой недели</h2>
+    <p class="section-sub price-note">Цена считается от веса игрушки: 10 г = 15 ₽</p>
+    <div class="catalog">
+      <div class="card">
+        <div class="emoji">🐉</div>
+        <h3>Дракон «Изумруд»</h3>
+        <p>Подвижный дракон 40 см — гнётся всем телом, расписан вручную.</p>
+        <div class="price">105 ₽</div>
+      </div>
+      <div class="card">
+        <div class="emoji">🐙</div>
+        <h3>Гибкий осьминог</h3>
+        <p>12 см извивается во все стороны, как настоящий — успокаивает нервы.</p>
+        <div class="price">38 ₽</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <div class="container">
+    <h2>Как рождается игрушка</h2>
+    <p class="section-sub">Четыре шага от идеи до вашей полки</p>
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <h3>Выбираете модель</h3>
+        <p>Берёте готовую из каталога или присылаете свою идею — подберём или найдём модель.</p>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <h3>Печатаем</h3>
+        <p>Слой за слоем, от 4 до 14 часов на фигурку. Качество слоя — 0,12 мм.</p>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <h3>Шлифуем и красим</h3>
+        <p>Убираем слои поддержки, красим акрилом и покрываем лаком.</p>
+      </div>
+      <div class="step">
+        <div class="num">4</div>
+        <h3>Отправляем</h3>
+        <p>Фото готовой игрушки — вам в мессенджер, потом сразу в дорогу.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="order">
+  <div class="container">
+    <h2>Заказать игрушку</h2>
+    <p class="section-sub">Оставьте контакт — напишем в течение дня, уточним модель, цвет и сроки.</p>
+    <div class="order-box">
+      <form id="orderForm" onsubmit="return sendOrder(event)">
+        <div class="form-group">
+          <label for="name">Ваше имя</label>
+          <input type="text" id="name" placeholder="Как к вам обращаться" required>
+        </div>
+        <div class="form-group">
+          <label for="phone">Телефон или ник в мессенджере</label>
+          <input type="text" id="phone" placeholder="+7 ... или @никнейм" required>
+        </div>
+        <div class="form-group">
+          <label for="toy">Игрушка</label>
+          <select id="toy">
+            <option value="Дракон «Изумруд» — 105 ₽">Дракон «Изумруд» — 105 ₽</option>
+            <option value="Гибкий осьминог — 38 ₽">Гибкий осьминог — 38 ₽</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-full">Отправить заявку</button>
+        <div class="form-status" id="status"></div>
+      </form>
+      <div class="max-block">
+        <a href="https://max.ru/join/NLzpbB8CPGabxZeq28CgqoRbGWB1nmi8DTaByWLfIRw" target="_blank" rel="noopener" class="btn btn-outline btn-full">💬 Зайти в MAX-канал</a>
+        <div class="max-note">MAX-канал нужен для того, чтобы написать сообщение — и я его увидел.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>© 2026 PLAY3D · Игрушки с 3D-принтера · Городец</p>
+    <p style="margin-top:10px"><a href="#catalog">Каталог</a> · <a href="#order">Заказать</a></p>
+  </div>
+</footer>
+
+<script>
+const MAX_LINK = "https://max.ru/join/NLzpbB8CPGabxZeq28CgqoRbGWB1nmi8DTaByWLfIRw";
+
+function sendOrder(e) {
+  e.preventDefault();
+  const name = document.getElementById('name').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const toy = document.getElementById('toy').value;
+  const text = "Заявка с сайта PLAY3D\nИмя: " + name + "\nКонтакт: " + phone + "\nИгрушка: " + toy;
+  const status = document.getElementById('status');
+  function openMax() {
+    const win = window.open(MAX_LINK, '_blank');
+    if (!win) window.location.href = MAX_LINK;
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() {
+      status.textContent = "Заявка скопирована! Вставьте её в сообщение в MAX и отправьте.";
+      openMax();
+    }).catch(function() {
+      status.textContent = "Скопируйте заявку вручную и вставьте в MAX.";
+      openMax();
+    });
+  } else {
+    status.textContent = "Скопируйте заявку вручную и вставьте в MAX.";
+    openMax();
+  }
+  return false;
+}
+</script>
+
+</body>
+</html>
